@@ -72,7 +72,7 @@ const BlogPost = ({post}) => {
         <RWebShare
         data={{
           text: post.description,
-          url: "http://localhost:3000",
+          url: `https://cat-mern-blog.netlify.app/${post._id}`,
           title: post.title,
         }}
         >
