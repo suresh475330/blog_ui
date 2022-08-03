@@ -73,7 +73,7 @@ const BlogPost = ({post}) => {
         data={{
           text: post.title,
           url: `https://cat-mern-blog.netlify.app/${post._id}`,
-          image : `${<img src={process.env.PUBLIC_URL+"images/logo.png"} />}`
+          image : <img src={process.env.PUBLIC_URL+"images/logo.png"} />
         }}
         >
           <IconButton  aria-label="share">
