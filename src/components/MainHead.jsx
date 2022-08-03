@@ -10,8 +10,7 @@ function MainHead() {
 
     const post = {
         title: 'Title of a longer featured blog post',
-        description:
-          "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
+        description: "This is the mern stack blog application. The UI is created in React and Matrial Ui. The state management tool used in Redux",
         image: '/photo.jpg',
         imageText: 'main image description',
       };

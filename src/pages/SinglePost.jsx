@@ -1,31 +1,56 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box'
-import { Typography } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import { Avatar, Chip, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { getSinglePost, reset } from "../features/posts/postSlice"
+import { useSelector, useDispatch } from "react-redux"
+import { useEffect } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import { red } from '@mui/material/colors';
+
+
 
 const SinglePost = () => {
+  const imgUrl = "https://cat-blog-api.herokuapp.com/images/"
+  
+  const dispatch = useDispatch()
+  const path = useParams()
+  
+  const { post,isLoadind} = useSelector((state) => state.post)
+  
+ 
+// console.log(post)
 
-  const post = {
-    title: 'Title of a longer featured blog post',
-    description:
-      "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
-    image: '/photo.jpg',
-    imageText: 'main image description',
-  };
+  useEffect(() => {
+    dispatch(getSinglePost(path.id))
+    dispatch(reset())
+  }, [dispatch, path])
+
+
+
+  if (isLoadind) {
+    return (
+      <Box sx={{ display: "flex", height: "500px", alignItems: 'center', justifyContent: "center" }}>
+        <CircularProgress sx={{ fontSize: 50 }} />
+      </Box>
+    );
+  }
   return (
+
     <Box>
+
       <Box sx={{
+        position: 'relative',
+        backgroundColor: 'grey.800',
+        color: '#fff',
         width: "auto",
-        height: 350,
+        height: { xs: 300, sm: 350, md: 400 },
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundImage: `url(${post.image})`,
+        backgroundImage: `url(${imgUrl}postImg/${post.image})`,
         mb: 4
       }} />
 
@@ -35,40 +60,34 @@ const SinglePost = () => {
 
           <Box display="flex" >
             <Box >
-              <Typography sx={{marginLeft : {md : 40},fontSize : {md : 35}}} variant='h5' fontStyle={'revert-layer'} textAlign="center" fontWeight="600">This is the Blog Title</Typography>
+              <Typography sx={{ marginLeft: { md: 40 }, fontSize: { md: 35 } }} variant='h5' fontStyle={'revert-layer'} textAlign="center" fontWeight="600">{post.title}</Typography>
             </Box>
+            <Box marginLeft="auto">
+           <Chip label={post?.categories? post.categories[0] :  "category"} variant="outlined" />
+            </Box>
+          </Box>
+          
 
-            <Stack marginLeft="auto" direction="row" spacing={2} sx={{maxWidth : {xs : 150,sm : 200,md : 225}}}>
-              <Button variant="outlined" color="success" endIcon={<EditIcon fontSize="small" />}>
-              <Typography sx={{fontSize: {xs : 10,sm : 17,md : 19}}}>Edit</Typography> 
-              </Button>
-              <Button variant="outlined" color="error" startIcon={<DeleteIcon fontSize="small"/>}>
-              <Typography sx={{fontSize: {xs : 10,sm : 17,md : 19}}}>Delete</Typography>
-              </Button>
-            </Stack>
+          <Box display="flex" alignItems={"center"} justifyContent="center" marginTop={1}>
+           
+          
+            <ListItemAvatar >
+              <Avatar
+                sx={{ bgcolor: red[500] }}
+                alt={post.authorName}
+                src={`${imgUrl}profileImg/${post.authorImage}`}
+                >
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText sx={{ color: "black" }} primary={post.authorName} />
 
+
+            <Typography sx={{ fontSize: { xs: "1em", sm: "1.1em", md: "1.2em" } }} fontWeight={600} color={"rgb(199, 202, 33)"} marginLeft="auto">Created At : {post.createdAt?.split('T')[0]}</Typography>
           </Box>
 
-          <Box display="flex" alignItems={"center"} marginTop={1}>
-            <Typography sx={{fontSize : {xs : "1em",sm : "1.3em" ,md : "1.6em"}}}  fontWeight={600} color={"rgb(199, 202, 33)"}>Author : Suresh</Typography>
-            <Typography sx={{fontSize : {xs : "1em",sm : "1.3em" ,md : "1.6em"}}}  fontWeight={600} color={"rgb(199, 202, 33)"} marginLeft="auto">Created At : 10/05/2003</Typography>
-          </Box>
-
-          <Box marginTop={1} marginBottom={2}>
+          <Box marginTop={2} marginBottom={2}>
             <Typography fontWeight={600} fontFamily={"sans-serif"}>
-              <span style={{fontSize : "1.5em"}}>Lorem</span> ipsum dolor sit amet consectetur adipisicing elit.
-               Impedit hic ut repellat quidem sit. Corrupti commodi vel 
-               repellendus esse quasi labore atque doloremque ab 
-               laudantium veniam quis quo molestiae maxime minima 
-               explicabo consectetur suscipit rerum iste, eius
-               sint praesentium dignissimos amet
-               consequuntur! Perspiciatis eligendi atque voluptatibus! 
-               Ea praesentium minima blanditiis, maiores repellendus 
-               delectus reprehenderit magnam ab obcaecati, minus 
-               suscipit, esse quia eaque iure quam illum. Non magnam 
-               nulla mollitia. Ea at veritatis, tempora quod est minima
-                dignissimos ducimus similique, eveniet blanditiis autem
-                 eos tenetur ut earum recusandae! Ducimus dolorum veritatis aperiam obcaecati aliquam, neque consequatur, accusamus blanditiis officiis consequuntur at?
+              {post.description}
             </Typography>
           </Box>
 
@@ -79,5 +98,6 @@ const SinglePost = () => {
 
   )
 }
+
 
 export default SinglePost

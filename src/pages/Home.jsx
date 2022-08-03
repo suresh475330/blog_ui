@@ -22,7 +22,6 @@ const Home = () => {
                     <Grid item xs={3}>
                         <Feed />
                     </Grid>
-
                 </Grid>
             </Container>
         </Box>

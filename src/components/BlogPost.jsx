@@ -7,50 +7,79 @@ import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
+import { pink, red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
+import { Link } from 'react-router-dom';
+import Badge from '@mui/material/Badge';
+import { useDispatch ,useSelector} from "react-redux"
+import {likePost, reset,  getAllPost} from  "../features/posts/postSlice"
+import {useState} from "react"
+import { RWebShare } from "react-web-share";
 
+const BlogPost = ({post}) => {
+  const dispatch = useDispatch()
+  const {user} = useSelector((state) => state.auth)
 
-const BlogPost = () => {
+  const [like,setLike] = useState(post.likes)
 
-  const dec = ` This impressive paella is a perfect party dish and a fun meal to cook
-  together with your guests. Add 1 cup of frozen peas along with the mussels,
-  if you like.`
+  const imgUrl = "https://cat-blog-api.herokuapp.com/images/"
 
-  const splitStr = dec.split(".")
-
+  const handleClick = (id) => {
+    if(!user){
+      return alert("Login to like post")
+    }
+    setLike((pre)=> pre + 1)
+    dispatch(likePost(id))
+    dispatch(getAllPost())
+    dispatch(reset())
+  }
   return (
     <Card sx={{ maxWidth: 375 }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
+          post.authorImage ? ( <Avatar sx={{ bgcolor: red[500] }} 
+            src={`${imgUrl}profileImg/${post.authorImage}`}
+            alt={post.authorName}>
+            </Avatar> ) : (
+               <Avatar  sx={{ bgcolor: red[500] }}>
+                {post.authorName.charAt()}
+               </Avatar>
+            ) 
         }
 
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={post.title}
+        subheader={new Date(post.createdAt).toISOString().split('T')[0]}
       />
+      <Link to={`/${post._id}`}>
       <CardMedia
         component="img"
         height="194"
-        image="/photo.jpg"
-        alt="Paella dish"
-      />
+        image={`${imgUrl}postImg/${post.image}`}
+        alt="Post img"
+        />
+        </Link>
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-         {splitStr[0]}... Click To read more
+        <Typography  variant="body2" color="text.secondary">
+         {post.description.slice(0, 30)}... Click To read more
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
+      <CardActions sx={{display : "flex" , alignItems : "center", justifyContent : "space-between"}}>
 
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+      <Badge  badgeContent={like} onClick={() => handleClick(post._id)} color="primary">
+          <FavoriteIcon  sx={{ color: pink[500] }}/>
+        </Badge>
+        <RWebShare
+        data={{
+          text: post.description,
+          url: "http://localhost:3000",
+          title: post.title,
+        }}
+        >
+          <IconButton  aria-label="share">
+          <ShareIcon  color="action"/>
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
+        </RWebShare>
       </CardActions>
      
     </Card>

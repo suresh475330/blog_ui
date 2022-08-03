@@ -10,8 +10,17 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import {Link} from "react-router-dom"
+import {useSelector} from "react-redux"
+import { Avatar, Tooltip } from '@mui/material';
+import { red } from '@mui/material/colors';
+
+
 
 const Header = () => {
+
+  const imgUrl = "https://cat-blog-api.herokuapp.com/images/profileImg/"
+
+  const {user} = useSelector((state) => state.auth)
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -21,6 +30,7 @@ const Header = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
 
   return (
     <Box sx={{ flexGrow: 1 }} >
@@ -48,9 +58,21 @@ const Header = () => {
             Blog App
           </Link>
           </Typography>
-
-         <Button color="inherit"><Link style={{textDecoration : "none",color : "#fff"}} to="login">Login</Link></Button> 
-         <Button color="inherit"><Link style={{textDecoration : "none",color : "#fff"}} to="register">Register</Link></Button> 
+         {
+          user ? (
+               <Tooltip title={user.user.name}>
+            <IconButton sx={{ p: 0 }}>
+              <Avatar alt={user.user.name}  sx={{ bgcolor: red[500] }} src={`${imgUrl}${user.user.profilePic}`} />
+            </IconButton>
+          </Tooltip>) : (
+            <div>
+             <Button color="inherit"><Link style={{textDecoration : "none",color : "#fff"}} to="login">Login</Link></Button> 
+             <Button color="inherit"><Link style={{textDecoration : "none",color : "#fff"}} to="register">Register</Link></Button> 
+            </ div>
+          )
+         }
+          
+      
         </Toolbar>
       </AppBar>
 
@@ -63,9 +85,9 @@ const Header = () => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
-        <MenuItem onClick={handleClose}>About</MenuItem>
+       {user && <Link to="/dashboard" style={{textDecoration : "none" , color : "black"}}><MenuItem onClick={handleClose}>DashBoard</MenuItem></Link>} 
+       {user && <Link to="addpost" style={{textDecoration : "none" , color : "black"}}><MenuItem onClick={handleClose}>Add Post</MenuItem></Link>}
+       <Link to="/about" style={{textDecoration : "none" , color : "black"}}><MenuItem onClick={handleClose}>About</MenuItem></Link> 
       </Menu>
     </Box>
   );
