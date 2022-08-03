@@ -71,9 +71,9 @@ const BlogPost = ({post}) => {
         </Badge>
         <RWebShare
         data={{
-          text: post.description,
+          text: post.title,
           url: `https://cat-mern-blog.netlify.app/${post._id}`,
-          title: post.title,
+          image : `${<img src={process.env.PUBLIC_URL+"images/logo.png"} />}`
         }}
         >
           <IconButton  aria-label="share">
