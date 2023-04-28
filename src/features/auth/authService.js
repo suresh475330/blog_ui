@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const url = "https://cat-blog-api.herokuapp.com/api/v1/auth/"
+const url = "https://cat-blog-api.onrender.com/api/v1/auth/"
 const config = {     
     headers: { 'content-type': 'multipart/form-data' }
 }
