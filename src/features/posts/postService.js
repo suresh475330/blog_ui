@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const url = "https://cat-blog-api.herokuapp.com/api/v1/blogs"
-const url2 = "https://cat-blog-api.herokuapp.com/api/v1/category"
+const url = "https://cat-blog-api.onrender.com/api/v1/blogs"
+const url2 = "https://cat-blog-api.onrender.com/api/v1/category"
 
 const getAllPost = async () => {
     const {data} = await axios.get(`${url}`)
